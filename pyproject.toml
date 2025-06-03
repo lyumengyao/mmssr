@@ -6,9 +6,9 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "llava"
-version = "1.7.0.dev0"
-description = "LLaVA OneVision: The Next Generation of LLaVA with Better Image and Video Understanding Capabilities"
+name = "mmssr"
+version = "0.1.0"
+description = "Harvesting rich, scalable and transferable multi-modal data for instruction fine-tuning, validated on LLaVA OneVision"
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
@@ -62,8 +62,8 @@ train = [
 ]
 
 [project.urls]
-"Homepage" = "https://llava-vl.github.io"
-"Bug Tracker" = "https://github.com/haotian-liu/LLaVA/issues"
+"Homepage" = "https://lyumengyao.github.io/projects/mmssr"
+"Bug Tracker" = "https://github.com/lyumengyao/mmssr/issues"
 
 [tool.setuptools.packages.find]
 include = ["llava*", "trl*"]

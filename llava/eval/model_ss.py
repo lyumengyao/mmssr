@@ -18,9 +18,7 @@ import re
 
 from PIL import Image
 
-from config.ss import style_beginning, style_ending, cap_beginning, cap_ending
-
-seps = [" ", "\n"]
+from config.ss import style_instruct, style_query, cap_instruct, cap_query, seps
 
 def format_convs(convs):
     
@@ -130,22 +128,25 @@ def eval_model(args):
 
     # prepare task
     if args.keyword == 'style':
-        ending = style_ending
-        beginning = style_beginning + seps[1]
+        query = style_query
+        instruct = style_instruct
     else:
-        ending = cap_ending.replace('{cap_keyword}', args.keyword)
-        beginning = cap_beginning + seps[1]
+        query = cap_query.replace('{cap_keyword}', args.keyword)
+        instruct = cap_instruct
 
     system_message = "You are a helpful assistant."
     if args.instruct_sys:
-        system_message = beginning
-        beginning = ""
+        system_message = instruct
+        instruct = ""
+
+    if instruct:
+        instruct += seps[1]
         
     for line in tqdm(questions, initial=start_index, total=len(questions)):
 
         image_file = line["image"]
-        qs = beginning + format_convs(line["conversations"]) + seps[1] + ending
-        line["conversations"][0]["value"] = qs
+        qs = instruct + format_convs(line["conversations"]) + seps[1] + query
+        line["conversations"] = [{"value": qs, "from": line["conversations"][0]["from"]}]
 
         args.conv_mode = "qwen_1_5"
 
@@ -203,7 +204,7 @@ if __name__ == "__main__":
     parser.add_argument("--keyword", type=str, required=True)
     parser.add_argument("--image-folder", type=str, default="")
     parser.add_argument("--extra-prompt", type=str, default="")
-    parser.add_argument("--question-file", type=str, default="tables/question.jsonl")
+    parser.add_argument("--question-file", type=str, default="tables/question.json")
     parser.add_argument("--answers-file", type=str, default="answer.jsonl")
     parser.add_argument("--temperature", type=float, default=0.2)
     parser.add_argument("--top_p", type=float, default=None)
